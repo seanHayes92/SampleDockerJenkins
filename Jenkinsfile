@@ -1,5 +1,5 @@
 node {
-    def app
+    def dockerImage
 
     stage('Clone repository') {
         /* Let's make sure we have the repository cloned to our workspace */
@@ -11,14 +11,14 @@ node {
         /* This builds the actual image; synonymous to
          * docker build on the command line */
 
-        app = docker.build("getintodevops/hellonode")
+        dockerImage = docker.build("getintodevops/hellonode")
     }
 
     stage('Test image') {
         /* Ideally, we would run a test framework against our image.
          * For this example, we're using a Volkswagen-type approach ;-) */
 
-        app.inside {
+        dockerImage.inside {
             sh 'echo "Tests passed"'
         }
     }
@@ -28,8 +28,9 @@ node {
          * First, the incremental build number from Jenkins
          * Second, the 'latest' tag.
          * Pushing multiple tags is cheap, as all the layers are reused. */
-        withDockerRegistry([ credentialsId: "docker-hub-credentials", url: "" ]) {
-        	bat "docker push seanbpmms/dockerJenkinsExample:latest"
+        docker.withRegistry('', 'docker-hub-credentials') {
+            dockerImage.push("${env.BUILD_NUMBER}")
+            dockerImage.push("latest")
         }
     }
 }
