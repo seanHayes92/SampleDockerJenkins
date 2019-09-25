@@ -2,4 +2,4 @@ This is a simple application for Docker deployments on a Jenkins server.
 
 Simply deploys and test a "Hello World" Node.js page and then pushes the image to my Docker repo
 
-This is a template that be re-used to do Continous Integration (CI) for other projects
+This is a template that be re-used to do Continous Integration (CI) for other projects.
